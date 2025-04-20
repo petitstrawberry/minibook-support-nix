@@ -16,23 +16,20 @@
           minibook-support-src = pkgs.fetchFromGitHub {
             owner = "petitstrawberry";
             repo = "minibook-support";
-            tag = "1.3.1";
+            rev = "1.3.1";
             sha256 = "sha256-kg4s9J+YtszrUsCR0nEzHFSAoInecmDmTefcsOZr02c=";
           };
         in {
           default = pkgs.stdenv.mkDerivation {
             pname = "minibook-support";
-            version = "2025-04-20";
+            version = "1.3.1";
             src = minibook-support-src;
-
-            buildInputs = [ pkgs.gcc ]; # 必要なビルドツールを指定
 
             buildPhase = ''
               make
             '';
 
             installPhase = ''
-              # バイナリを配置
               mkdir -p $out/bin
               cp moused/bin/moused $out/bin/
               cp keyboardd/bin/keyboardd $out/bin/
@@ -49,9 +46,12 @@
         }
       );
 
-      nixosModules.minibook-support = { config, lib, pkgs, ... }: {
+      overlays.default = final: prev: {
+        minibook-support = self.packages.${prev.system}.default;
+      };
+
+      nixosModules.minibook-support = {
         imports = [ ./modules/default.nix ];
-        config.services.minibook-support.package = self.packages.${config.system}.default;
       };
     };
 }
