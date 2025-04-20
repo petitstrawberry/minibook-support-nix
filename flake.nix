@@ -82,7 +82,7 @@
               ExecStart = "${self.packages.${pkgs.system}.default}/bin/tabletmoded";
             };
           };
-        }
+        };
 
         environment.systemPackages = [ self.packages.${pkgs.system}.default ];
       };
