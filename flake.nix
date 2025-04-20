@@ -34,6 +34,12 @@
               cp moused/bin/moused $out/bin/
               cp keyboardd/bin/keyboardd $out/bin/
               cp tabletmoded/bin/tabletmoded $out/bin/
+
+              # Copy systemd service files
+              mkdir -p $out/etc/systemd/system
+              cp moused/install/moused.service $out/etc/systemd/system/
+              cp keyboardd/install/keyboardd.service $out/etc/systemd/system/
+              cp tabletmoded/install/tabletmoded.service $out/etc/systemd/system/
             '';
 
             meta = {
@@ -45,13 +51,5 @@
           };
         }
       );
-
-      overlays.default = final: prev: {
-        minibook-support = self.packages.${prev.system}.default;
-      };
-
-      nixosModules.minibook-support = {
-        imports = [ ./modules/default.nix ];
-      };
     };
 }
