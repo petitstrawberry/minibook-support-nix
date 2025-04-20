@@ -35,11 +35,11 @@
               cp keyboardd/bin/keyboardd $out/bin/
               cp tabletmoded/bin/tabletmoded $out/bin/
 
-              # Copy systemd service files
-              mkdir -p $out/etc/systemd/system
-              install -Dm 0644 moused/install/moused.service $out/etc/systemd/system/moused.service
-              install -Dm 0644 keyboardd/install/keyboardd.service $out/etc/systemd/system/keyboardd.service
-              install -Dm 0644 tabletmoded/install/tabletmoded.service $out/etc/systemd/system/tabletmoded.service
+              # # Copy systemd service files
+              # mkdir -p $out/etc/systemd/system
+              # install -Dm 0644 moused/install/moused.service $out/etc/systemd/system/moused.service
+              # install -Dm 0644 keyboardd/install/keyboardd.service $out/etc/systemd/system/keyboardd.service
+              # install -Dm 0644 tabletmoded/install/tabletmoded.service $out/etc/systemd/system/tabletmoded.service
             '';
 
             meta = {
@@ -53,11 +53,36 @@
       );
 
       nixosModules.default = { config, pkgs, ... }: {
-        systemd.units = {
-          "moused.service".enable = true;
-          "keyboardd.service".enable = true;
-          "tabletmoded.service".enable = true;
-        };
+        # systemd.units = {
+        #   "moused.service".enable = true;
+        #   "keyboardd.service".enable = true;
+        #   "tabletmoded.service".enable = true;
+        # };
+        systemd.services = {
+          moused = {
+            description = "Daemon for the mouse of the MiniBook";
+            wantedBy = [ "multi-user.target" ];
+            serviceConfig = {
+              ExecStart = "${self.packages.${pkgs.system}.default}/bin/moused";
+            };
+          };
+
+          keyboardd = {
+            description = "Daemon for the keyboard of the MiniBook";
+            wantedBy = [ "multi-user.target" ];
+            serviceConfig = {
+              ExecStart = "${self.packages.${pkgs.system}.default}/bin/keyboardd";
+            };
+          };
+
+          tabletmoded = {
+            description = "Daemon for the tablet mode of the MiniBook";
+            wantedBy = [ "multi-user.target" ];
+            serviceConfig = {
+              ExecStart = "${self.packages.${pkgs.system}.default}/bin/tabletmoded";
+            };
+          };
+        }
 
         environment.systemPackages = [ self.packages.${pkgs.system}.default ];
       };
