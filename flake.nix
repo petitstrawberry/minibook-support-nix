@@ -42,12 +42,19 @@
               cp tabletmoded/install/tabletmoded.service $out/etc/systemd/system/
             '';
 
+            systemd.units = [
+              "moused.service"
+              "keyboardd.service"
+              "tabletmoded.service"
+            ];
+
             meta = {
               description = "Support package for CHUWI MiniBook";
               homepage = "https://github.com/petitstrawberry/minibook-support";
               license = "MIT";
               platforms = [ "x86_64-linux" ];
             };
+
           };
         }
       );
