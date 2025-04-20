@@ -13,11 +13,11 @@
       packages = forAllSystems (system:
         let
           pkgs = import nixpkgs { inherit system; };
-	  minibook-support-src = pkgs.fetchFromGitHub {
-	    owner = "petitstrawberry";
-	    repo = "minibook-support";
-	    tag = "1.3.1";
-	    sha256 = "sha256-kg4s9J+YtszrUsCR0nEzHFSAoInecmDmTefcsOZr02c=";
+          minibook-support-src = pkgs.fetchFromGitHub {
+            owner = "petitstrawberry";
+            repo = "minibook-support";
+            tag = "1.3.1";
+            sha256 = "sha256-kg4s9J+YtszrUsCR0nEzHFSAoInecmDmTefcsOZr02c=";
           };
         in {
           default = pkgs.stdenv.mkDerivation {
@@ -37,12 +37,6 @@
               cp moused/bin/moused $out/bin/
               cp keyboardd/bin/keyboardd $out/bin/
               cp tabletmoded/bin/tabletmoded $out/bin/
-
-              # # systemdサービスファイルを配置
-              # mkdir -p $out/lib/systemd/system
-              # cp moused/install/moused.service $out/lib/systemd/system/
-              # cp keyboardd/install/keyboardd.service $out/lib/systemd/system/
-              # cp tabletmoded/install/tabletmoded.service $out/lib/systemd/system/
             '';
 
             meta = {
@@ -55,6 +49,9 @@
         }
       );
 
-      nixosModules.minibook-support = import ./modules;
+      nixosModules.minibook-support = { config, lib, pkgs, ... }: {
+        imports = [ ./modules/default.nix ];
+        config.services.minibook-support.package = self.packages.${systems[0]}.default;
+      };
     };
 }
