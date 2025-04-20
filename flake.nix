@@ -48,35 +48,41 @@
         }
       );
 
-      nixosModules.default = { config, pkgs, ... }: {
-        systemd.services = {
-          moused = {
-            description = "Daemon for the mouse of the MiniBook";
-            wantedBy = [ "multi-user.target" ];
-            serviceConfig = {
-              ExecStart = "${self.packages.${pkgs.system}.default}/bin/moused";
-            };
-          };
+      nixosModules.default = { config, lib, pkgs, ... }: {
+        options.services.minibook-support = {
+          enable = lib.mkEnableOption "Enable CHUWI MiniBook support (moused, keyboardd, tabletmoded)";
+        };
 
-          keyboardd = {
-            description = "Daemon for the keyboard of the MiniBook";
-            wantedBy = [ "multi-user.target" ];
-            serviceConfig = {
-              ExecStart = "${self.packages.${pkgs.system}.default}/bin/keyboardd";
-            };
-          };
+        config = lib.mkIf config.services.minibook-support.enable {
+          environment.systemPackages = [ self.packages.${pkgs.system}.default ];
 
-          tabletmoded = {
-            description = "Daemon for the tablet mode of the MiniBook";
-            wantedBy = [ "multi-user.target" ];
-            serviceConfig = {
-              ExecStart = "${self.packages.${pkgs.system}.default}/bin/tabletmoded";
-              Environment = [ "PATH=/run/current-system/sw/bin:/sbin:/usr/sbin:/bin:/usr/bin" ];
+          systemd.services = {
+            moused = {
+              description = "Daemon for the mouse of the MiniBook";
+              wantedBy = [ "multi-user.target" ];
+              serviceConfig = {
+                ExecStart = "${self.packages.${pkgs.system}.default}/bin/moused";
+              };
+            };
+
+            keyboardd = {
+              description = "Daemon for the keyboard of the MiniBook";
+              wantedBy = [ "multi-user.target" ];
+              serviceConfig = {
+                ExecStart = "${self.packages.${pkgs.system}.default}/bin/keyboardd";
+              };
+            };
+
+            tabletmoded = {
+              description = "Daemon for the tablet mode of the MiniBook";
+              wantedBy = [ "multi-user.target" ];
+              serviceConfig = {
+                ExecStart = "${self.packages.${pkgs.system}.default}/bin/tabletmoded";
+                Environment = [ "PATH=/run/current-system/sw/bin:/sbin:/usr/sbin:/bin:/usr/bin" ];
+              };
             };
           };
         };
-
-        environment.systemPackages = [ self.packages.${pkgs.system}.default ];
       };
     };
 }
