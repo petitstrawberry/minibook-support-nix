@@ -51,7 +51,7 @@
 
       nixosModules.minibook-support = { config, lib, pkgs, ... }: {
         imports = [ ./modules/default.nix ];
-        config.services.minibook-support.package = pkgs.callPackage self.packages.${config.system}.default {};
+        config.services.minibook-support.package = self.packages.${config.system}.default;
       };
     };
 }
