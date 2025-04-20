@@ -2,7 +2,7 @@
   description = "Nix and NixOS module for minibook-support";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
   };
 
   outputs = { self, nixpkgs, ... }:
@@ -22,7 +22,7 @@
         in {
           default = pkgs.stdenv.mkDerivation {
             pname = "minibook-support";
-            version = "unstable-2025-04-20";
+            version = "2025-04-20";
             src = minibook-support-src;
 
             buildInputs = [ pkgs.gcc ]; # 必要なビルドツールを指定
