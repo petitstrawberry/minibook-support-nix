@@ -28,21 +28,21 @@
             buildInputs = [ pkgs.gcc ]; # 必要なビルドツールを指定
 
             buildPhase = ''
-              make -C src
+              make
             '';
 
             installPhase = ''
               # バイナリを配置
               mkdir -p $out/bin
-              cp src/moused/bin/moused $out/bin/
-              cp src/keyboardd/bin/keyboardd $out/bin/
-              cp src/tabletmoded/bin/tabletmoded $out/bin/
+              cp moused/bin/moused $out/bin/
+              cp keyboardd/bin/keyboardd $out/bin/
+              cp tabletmoded/bin/tabletmoded $out/bin/
 
-              # systemdサービスファイルを配置
-              mkdir -p $out/lib/systemd/system
-              cp src/moused/install/moused.service $out/lib/systemd/system/
-              cp src/keyboardd/install/keyboardd.service $out/lib/systemd/system/
-              cp src/tabletmoded/install/tabletmoded.service $out/lib/systemd/system/
+              # # systemdサービスファイルを配置
+              # mkdir -p $out/lib/systemd/system
+              # cp moused/install/moused.service $out/lib/systemd/system/
+              # cp keyboardd/install/keyboardd.service $out/lib/systemd/system/
+              # cp tabletmoded/install/tabletmoded.service $out/lib/systemd/system/
             '';
 
             meta = {
