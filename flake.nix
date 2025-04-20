@@ -25,6 +25,8 @@
             version = "1.3.1";
             src = minibook-support-src;
 
+            buildInputs = [ pkgs.kmod ];
+
             buildPhase = ''
               make
             '';
