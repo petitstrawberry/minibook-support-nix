@@ -3,10 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    minibook-support-src.url = "github:petitstrawberry/minibook-support";
   };
 
-  outputs = { self, nixpkgs, minibook-support-src, ... }:
+  outputs = { self, nixpkgs, ... }:
     let
       systems = [ "x86_64-linux" ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
@@ -14,13 +13,19 @@
       packages = forAllSystems (system:
         let
           pkgs = import nixpkgs { inherit system; };
+	  minibook-support-src = pkgs.fetchFromGitHub {
+	    owner = "petitstrawberry";
+	    repo = "minibook-support";
+	    tag = "1.3.1";
+	    sha256 = "sha256-kg4s9J+YtszrUsCR0nEzHFSAoInecmDmTefcsOZr02c=";
+          };
         in {
           default = pkgs.stdenv.mkDerivation {
             pname = "minibook-support";
             version = "unstable-2025-04-20";
             src = minibook-support-src;
 
-            buildInputs = [ pkgs.gcc pkgs.make ]; # 必要なビルドツールを指定
+            buildInputs = [ pkgs.gcc ]; # 必要なビルドツールを指定
 
             buildPhase = ''
               make -C src
