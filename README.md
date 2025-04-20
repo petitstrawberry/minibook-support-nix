@@ -62,7 +62,7 @@ If you are using NixOS, you can integrate this package into your system configur
        system = "x86_64-linux";
        modules = [
          ./configuration.nix
-         minibook-support.nixosModules.minibook-support
+         minibook-support.nixosModules.default
        ];
      };
    };
