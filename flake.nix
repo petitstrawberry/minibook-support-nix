@@ -61,7 +61,7 @@
               description = "Daemon for the mouse of the MiniBook";
               wantedBy = [ "multi-user.target" ];
               serviceConfig = {
-                ExecStart = "${self.packages.${pkgs.system}.default}/bin/moused";
+                ExecStart = "${self.packages.${pkgs.system}.default}/bin/moused -c";
               };
             };
 
